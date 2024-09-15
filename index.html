@@ -7,17 +7,61 @@
     <title>Document</title>
 </head>
 <body>
-    <script src="https://unpkg.com/vue@next"></script>
-    <div id="app">{{ text }}</div>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <div id="app">
+        
+    </div>
     <script>
-        const vm = Vue.createApp({
-            data() {
-                return {
-                    text: "Hola vue"
-                };
-            }
-        }).mount("#app");
-        console.log(vm);
+        //retorna la applicación lista, el model view
+        const app = Vue.createApp({
+            data(){
+                return{
+                    text: "Hola Vue"
+                }
+            },
+            provide(){
+                return{
+                    otroTexto: this.text
+                }
+            },
+            methods: {
+            },
+            template:`
+            <p>Padre: {{text}}</p>
+            <v-primerHijo/>
+            `
+        })
+        app.component("v-primerHijo",{
+            inject: ["otroTexto"],
+            template:`
+            <p>Primer hijo: {{otroTexto}}</p>
+            <v-tercer/>
+            `
+        } )
+        app.component("v-tercer",{
+            inject: ["otroTexto"],
+            template:`
+            <div>segundo hijo: {{otroTexto}}</div>
+            `
+        } )
+        const vm =app.mount("#app")
+        console.log(vm)
     </script>
+    <style>
+        html, body {
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        #app, .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+        }
+       
+    </style>
 </body>
 </html>
